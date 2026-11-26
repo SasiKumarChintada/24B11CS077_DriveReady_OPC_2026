@@ -1,6 +1,6 @@
 # Day-2: BrightPage Stationery & Office Supplies Conversational Agent
 
-## Task
+## Task 
 Build a stateful, policy-aware conversational AI assistant for **BrightPage Stationery & Office Supplies** that classifies customer intents, extracts structured JSON orders, calculates item totals with bulk discounts, manages multi-turn conversation memory with sliding-window trimming, and handles API errors gracefully.
 
 ## Implementation
