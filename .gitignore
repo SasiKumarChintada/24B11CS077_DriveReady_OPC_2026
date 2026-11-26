@@ -3,7 +3,7 @@
 .env.local
 .env.*
 !.env.example
-
+ 
 # Python & Jupyter 
 __pycache__/
 *.py[cod]
