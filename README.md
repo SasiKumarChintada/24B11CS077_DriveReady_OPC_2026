@@ -5,7 +5,7 @@ Repository for daily tasks, progressive agent architectures, and hands-on implem
 ---
 
 ## 🗂️ Daily Task Tracker
-
+ 
 ### [DAY 1] Fundamentals & First API Call
 - **Directory:** [`DAY1/`](file:///c:/Users/ramuv/AgenticAI/DAY1)
 - **Notebook:** [`agenticAI_Day1.ipynb`](file:///c:/Users/ramuv/AgenticAI/DAY1/agenticAI_Day1.ipynb)
