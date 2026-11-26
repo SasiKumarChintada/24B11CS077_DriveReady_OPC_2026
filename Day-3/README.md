@@ -1,6 +1,6 @@
 # Day-3: Prompt Templates, Memory, Automated Evaluation & Agent Preview
 
-## Task
+## Task 
 Refactor single-call LLM scripts into composable LangChain LCEL chains (`ChatPromptTemplate`, `MessagesPlaceholder`, `StrOutputParser`), evaluate prompt reliability using CSV assertion test suites (`tests.csv` and `brightpage_tests.csv`), compare output stability across temperature settings (`0.3` vs `1.0`), and preview LangChain's `create_agent` loop.
 
 ## Implementation
