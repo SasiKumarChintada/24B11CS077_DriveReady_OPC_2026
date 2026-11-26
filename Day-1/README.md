@@ -1,6 +1,6 @@
 # Day-1: Sweet Crumbs Home Bakery AI Assistant & Prompt Guard
 
-## Task
+## Task 
 Build a domain-specific AI customer assistant for **Sweet Crumbs Home Bakery** using structured prompt engineering (Role, Facts, Rules, Format), measure API token usage, and validate user inputs against prompt injection using a safety guard model.
 
 ## Implementation
