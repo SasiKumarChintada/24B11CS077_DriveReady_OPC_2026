@@ -8,9 +8,7 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.output_parsers import StrOutputParser
 from langchain.agents import create_agent
 
-# ==============================================================================
 # 1. Setup & Model Initialization (Groq API)
-# ==============================================================================
 load_dotenv(find_dotenv())
 api_key = os.environ.get("GROQ_API_KEY")
 
@@ -33,9 +31,7 @@ MODEL_NAME = "openai/gpt-oss-120b"
 llm = ChatGroq(model=MODEL_NAME, temperature=0.3, groq_api_key=api_key)
 print(f"Groq LLM ready: {MODEL_NAME} (temperature=0.3)\n")
 
-# ==============================================================================
 # 2. LangChain LCEL Chain + Multi-Turn Memory (Sweet Crumbs Home Bakery)
-# ==============================================================================
 BAKERY_SYSTEM = """ROLE:   You are the helpful customer assistant for Sweet Crumbs Home Bakery.
 FACTS:  Menu: Plum cake Rs 500, Chocolate cake Rs 650, Cupcake Rs 80 each.
         All cakes are available in eggless versions.
@@ -53,7 +49,6 @@ bakery_prompt = ChatPromptTemplate.from_messages([
 ])
 
 bakery_chain = bakery_prompt | llm | StrOutputParser()
-
 chat_history = []
 
 
@@ -65,34 +60,17 @@ def ask_bakery(question: str) -> str:
 
 
 print("--- Multi-Turn Memory & Customer Verification (Sweet Crumbs) ---")
-verification_turns = [
+for user_msg in [
     "Hi, I am Karthik. Do you make eggless chocolate cakes?",
     "Can you remember my name and tell me the cost for 1 chocolate cake and 4 cupcakes?",
     "Can I get this delivered to Visakhapatnam today evening?",
-]
-for user_msg in verification_turns:
+]:
     print(f"Customer:  {user_msg}")
     print(f"Assistant: {ask_bakery(user_msg)}\n")
 
-# ==============================================================================
 # 3. Automated Prompt Evaluation (tests.csv)
-# ==============================================================================
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 BAKERY_TESTS_PATH = os.path.join(BASE_DIR, "tests.csv")
-
-BAKERY_TESTS_DATA = """question,must_include
-What is the price of a chocolate cake?,650
-Are eggless cakes available?,eggless
-Can I order a cake for tonight?,24 hours
-Do you deliver to Samalkot?,check with the owner
-How much do 5 cupcakes cost?,400
-What is the cost of a plum cake?,500
-What is the total for 2 plum cakes and 3 cupcakes?,1240
-Do you sell gluten-free brownies?,check with the owner
-"""
-
-with open(BAKERY_TESTS_PATH, "w", encoding="utf-8", newline="") as f:
-    f.write(BAKERY_TESTS_DATA.strip() + "\n")
 
 
 def run_tests(csv_path: str, active_chain, delay: float = 0.3) -> tuple[float, list[str]]:
@@ -120,9 +98,7 @@ def run_tests(csv_path: str, active_chain, delay: float = 0.3) -> tuple[float, l
 print("--- Automated Evaluation: Sweet Crumbs (tests.csv) ---")
 bakery_rate, _ = run_tests(BAKERY_TESTS_PATH, bakery_chain)
 
-# ==============================================================================
 # 4. Agent Sneak Peek (LangChain create_agent with tools=[])
-# ==============================================================================
 print("--- Agent Sneak Peek (create_agent) ---")
 preview_agent = create_agent(model=llm, tools=[], system_prompt=BAKERY_SYSTEM)
 agent_res = preview_agent.invoke({
@@ -131,9 +107,7 @@ agent_res = preview_agent.invoke({
 last_msg = agent_res["messages"][-1]
 print("Agent Reply:", getattr(last_msg, "content", str(last_msg)), "\n")
 
-# ==============================================================================
 # 5. Student's 30%: BrightPage Stationery & Office Supplies Evaluation
-# ==============================================================================
 STATIONERY_ITEMS = {
     "spiral notebook (200 pgs)": 85,
     "a4 copier paper ream (500 sheets)": 320,
@@ -151,7 +125,6 @@ CATALOGUE_LINES = "\n".join(
     f"  - {name}: Rs {price}" for name, price in STATIONERY_ITEMS.items()
 )
 
-# Version 1 (Baseline Prompt)
 BRIGHTPAGE_V1 = f"""ROLE:   You are the customer assistant for BrightPage Stationery & Office Supplies.
 FACTS:  Catalogue (INR):
 {CATALOGUE_LINES}
@@ -171,26 +144,10 @@ bp_prompt_v1 = ChatPromptTemplate.from_messages([
 bp_chain_v1 = bp_prompt_v1 | llm | StrOutputParser()
 
 BP_TESTS_PATH = os.path.join(BASE_DIR, "brightpage_tests.csv")
-BP_TESTS_DATA = """question,must_include
-How much does one spiral notebook cost?,85
-What is the total for 3 permanent markers?,105
-What are your Sunday store timings?,10:00
-Do I get free delivery on an order worth Rs 750?,free
-What is the delivery charge for a Rs 250 order?,40
-Do you have USB flash drives in stock?,store manager
-Within how many days can damaged items be replaced?,3 days
-What discount applies if I buy 12 spiral notebooks?,10%
-What is the combined price of 1 whiteboard marker set and 1 clear file folder pack?,230
-Can you courier stationery to another city?,local city limits
-"""
-
-with open(BP_TESTS_PATH, "w", encoding="utf-8", newline="") as f:
-    f.write(BP_TESTS_DATA.strip() + "\n")
 
 print("=== BrightPage Evaluation: Baseline Prompt (V1) ===")
 v1_rate, _ = run_tests(BP_TESTS_PATH, bp_chain_v1)
 
-# Version 2 (Improved Prompt: explicit plain-number formatting + explicit local city limits wording)
 BRIGHTPAGE_V2 = BRIGHTPAGE_V1 + """
         Always write totals as plain numbers without commas (e.g. Rs 1200) and
         explicitly state 'local city limits' whenever asked about out-of-city delivery."""
@@ -206,9 +163,7 @@ print("=== BrightPage Evaluation: Improved Prompt (V2) ===")
 v2_rate, _ = run_tests(BP_TESTS_PATH, bp_chain_v2)
 print(f"Pass rate comparison (V1 -> V2): {v1_rate:.0%} -> {v2_rate:.0%}\n")
 
-# ==============================================================================
 # 6. Temperature Stability Check (temperature=1.0 across two runs)
-# ==============================================================================
 llm_creative = ChatGroq(model=MODEL_NAME, temperature=1.0, groq_api_key=api_key)
 bp_chain_temp1 = bp_prompt_v2 | llm_creative | StrOutputParser()
 
@@ -220,9 +175,7 @@ drifted = sum(a != b for a, b in zip(t1_answers_a, t1_answers_b))
 print(f"Responses that changed wording between runs at T=1.0: {drifted}/{len(t1_answers_a)}")
 print(f"Pass rates at T=1.0: Run 1 = {t1_rate_a:.0%}, Run 2 = {t1_rate_b:.0%}\n")
 
-# ==============================================================================
 # 7. Decision Framework: Plain Code vs One LLM Call vs Agent
-# ==============================================================================
 WORKFLOW_DECISIONS = [
     (
         "Compute cart subtotal, apply 10% bulk discount for 10+ items, and add Rs 40 delivery fee",
