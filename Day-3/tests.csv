@@ -1,0 +1,15 @@
+---
+
+### 3. `Day-3/tests.csv`
+Create **`Day-3/tests.csv`** (**Add file → Create new file → `Day-3/tests.csv`**) and paste:
+
+```csv
+question,must_include
+What is the price of a chocolate cake?,650
+Are eggless cakes available?,eggless
+Can I order a cake for tonight?,24 hours
+Do you deliver to Samalkot?,check with the owner
+How much do 5 cupcakes cost?,400
+What is the cost of a plum cake?,500
+What is the total for 2 plum cakes and 3 cupcakes?,1240
+Do you sell gluten-free brownies?,check with the owner
